@@ -326,10 +326,24 @@ require('lazy').setup({
         -- },
         -- pickers = {}
         extensions = {
+          file_browser = {
+            theme = 'ivy',
+            -- disables netrw and use telescope-file-browser in its place
+            hijack_netrw = true,
+            mappings = {
+              ['i'] = {
+                -- your custom insert mode mappings
+              },
+              ['n'] = {
+                -- your custom normal mode mappings
+              },
+            },
+          },
           ['ui-select'] = {
-            require('telescope.themes').get_dropdown(),
+            require('telescope.themes').get_ivy(),
           },
         },
+        defaults = require('telescope.themes').get_ivy(),
       }
 
       -- Enable Telescope extensions if they are installed
@@ -371,6 +385,15 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
+    end,
+  },
+  {
+    'nvim-telescope/telescope-file-browser.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' },
+    config = function()
+      require('telescope').setup {
+        vim.keymap.set('n', '<space>sb', ':Telescope file_browser<CR>', { desc = '[S]earch in file [B]rowser' }),
+      }
     end,
   },
 
@@ -996,6 +1019,13 @@ require('lazy').setup({
     },
   },
 })
+
+-- Load telescope extensions
+require('telescope').load_extension 'file_browser'
+
+-- Remap some view scrolling commands to center view.
+vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Half page up (centered)' })
+vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Half page down (centered)' })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
