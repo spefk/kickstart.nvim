@@ -577,6 +577,7 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
+        marksman = {},
         clangd = {},
         gopls = {},
         pyright = {},
@@ -1041,15 +1042,13 @@ require('lazy').setup({
       })
     end,
   },
-
   {
     'iamcco/markdown-preview.nvim',
     cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
-    build = 'cd app && yarn install',
-    init = function()
-      vim.g.mkdp_filetypes = { 'markdown' }
-    end,
     ft = { 'markdown' },
+    build = function()
+      vim.fn['mkdp#util#install']()
+    end,
   },
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
